@@ -1,10 +1,8 @@
 import os
 from fastapi import FastAPI, HTTPException
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, text
 import pandas as pd
 from dotenv import load_dotenv
-import dash
 
 load_dotenv()
 
@@ -21,7 +19,7 @@ app = FastAPI()
 
 
 @app.get("/{table_name}")
-def get_user(table_name: str):
+def get_table(table_name: str):
     try:
         with engine.connect() as conn:
             query = text(f"SELECT id, kwartal, bialystok, bydgoszcz, gdansk, gdynia, katowice, kielce, krakow, lublin, lodz, olsztyn, opole, poznan, rzeszow, szczecin, warszawa, wroclaw, zielona_gora, siedem_miast, dziesiec_miast, szesc_miast_bez_warszawy, dziewiec_miast FROM public.{table_name} ORDER BY id")
