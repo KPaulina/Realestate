@@ -52,36 +52,45 @@ def generate_percentage_change_graph(df, title):
 app.layout = html.Div([
     html.H1("Polska ceny nieruchomości", style={'textAlign': 'center', 'margin-bottom': '20px'}),
 
+    # Sekcja zmian procentowych
+    html.H2("📊 Zmiany procentowe średniej ceny pomiędzy przedostatnim i ostatnim kwartałem", style={'textAlign': 'center', 'margin-top': '40px', 'color': '#444'}),
+
+    html.Div([
+        dcc.Graph(id='offer-change-chart', style={'padding': '10px'}),
+        dcc.Graph(id='transaction-change-chart', style={'padding': '10px'}),
+        dcc.Graph(id='offer-secondary-change-chart', style={'padding': '10px'}),
+        dcc.Graph(id='transaction-secondary-change-chart', style={'padding': '10px'})
+    ], style={'display': 'flex', 'flex-wrap': 'wrap', 'justify-content': 'center', 'gap': '20px'}),
+
+    # Sekcja średnich cen
+    html.H2("🏡 Średnie ceny ofertowe i transakcyjne",
+            style={'textAlign': 'center', 'margin-top': '60px', 'color': '#444'}),
+
+    # Dropdown dla wyboru miasta (przeniesiony tutaj)
     html.Div([
         dcc.Dropdown(
+            id='cities-dropdown',
             options=[{'label': city, 'value': city} for city in cities],
             value=cities[14] if len(cities) > 0 else None,
-            id='cities-dropdown',
             clearable=False,
             searchable=True,
-            style={'width': '40%', 'margin': 'auto', 'font-size': '16px'}
+            style={
+                'width': '40%',
+                'margin': '10px auto',
+                'font-size': '14px',
+                'padding': '5px',
+                'border-radius': '5px',
+                'background-color': 'white'
+            }
         )
     ], style={'display': 'flex', 'justify-content': 'center', 'margin-bottom': '30px'}),
 
-    # 🔹 Najpierw wykresy zmian procentowych
-    html.H2("Zmiany procentowe cen", style={'textAlign': 'center', 'margin-top': '40px'}),
-
     html.Div([
-        dcc.Graph(id='offer-change-chart'),
-        dcc.Graph(id='transaction-change-chart'),
-        dcc.Graph(id='offer-secondary-change-chart'),
-        dcc.Graph(id='transaction-secondary-change-chart'),
-    ], style={'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'gap': '20px'}),
-
-    # 🔹 Dopiero potem wykresy średnich cen
-    html.H2("Średnie ceny ofertowe i transakcyjne", style={'textAlign': 'center', 'margin-top': '40px'}),
-
-    html.Div([
-        dcc.Graph(id='offer-price-chart', figure=px.bar(title="Ceny ofertowe - Rynek Pierwotny")),
-        dcc.Graph(id='transaction-price-chart', figure=px.bar(title="Ceny transakcyjne - Rynek Pierwotny")),
-        dcc.Graph(id='offer-price-secondary-chart', figure=px.bar(title="Ceny ofertowe - Rynek Wtórny")),
-        dcc.Graph(id='transaction-price-secondary-chart', figure=px.bar(title="Ceny transakcyjne - Rynek Wtórny"))
-    ], style={'display': 'flex', 'flex-direction': 'column', 'align-items': 'center', 'gap': '20px'}),
+        dcc.Graph(id='offer-price-chart', style={'padding': '10px'}),
+        dcc.Graph(id='transaction-price-chart', style={'padding': '10px'}),
+        dcc.Graph(id='offer-price-secondary-chart', style={'padding': '10px'}),
+        dcc.Graph(id='transaction-price-secondary-chart', style={'padding': '10px'})
+    ], style={'display': 'flex', 'flex-wrap': 'wrap', 'justify-content': 'center', 'gap': '20px'}),
 ])
 
 
@@ -117,21 +126,25 @@ def update_percentage_change_graph(_):
     fig_offer = px.bar(df_offer_changes, x="cities", y="price_percentage_change",
                        title="Zmiana procentowa - Ceny Ofertowe (Rynek Pierwotny)",
                        color="price_percentage_change",
+                       labels={"price_percentage_change": "Zmiany procentowe", "cities": "Miasta"},
                        color_continuous_scale="RdYlGn")
 
     fig_transaction = px.bar(df_transaction_changes, x="cities", y="price_percentage_change",
                              title="Zmiana procentowa - Ceny Transakcyjne (Rynek Pierwotny)",
                              color="price_percentage_change",
+                             labels={"price_percentage_change": "Zmiany procentowe", "cities": "Miasta"},
                              color_continuous_scale="RdYlGn")
 
     fig_offer_secondary = px.bar(df_offer_secondary_changes, x="cities", y="price_percentage_change",
                                  title="Zmiana procentowa - Ceny Ofertowe (Rynek Wtórny)",
                                  color="price_percentage_change",
+                                 labels={"price_percentage_change": "Zmiany procentowe", "cities": "Miasta"},
                                  color_continuous_scale="RdYlGn")
 
     fig_transaction_secondary = px.bar(df_transaction_secondary_changes, x="cities", y="price_percentage_change",
                                        title="Zmiana procentowa - Ceny Transakcyjne (Rynek Wtórny)",
                                        color="price_percentage_change",
+                                       labels={"price_percentage_change": "Zmiany procentowe", "cities": "Miasta"},
                                        color_continuous_scale="RdYlGn")
 
     return fig_offer, fig_transaction, fig_offer_secondary, fig_transaction_secondary
