@@ -1,0 +1,28 @@
+/* === Custom Darkly RangeSlider === */
+
+.custom-slider .rc-slider-rail {
+    background-color: #444 !important; /* Dark track */
+}
+
+.custom-slider .rc-slider-track {
+    background-color: #1E90FF !important; /* Blue track */
+}
+
+.custom-slider .rc-slider-handle {
+    border: 2px solid #1E90FF !important; /* Blue handle border */
+    background-color: #222 !important; /* Dark background */
+}
+
+.custom-slider .rc-slider-handle:hover {
+    border-color: #00BFFF !important; /* Lighter blue on hover */
+}
+
+.custom-slider .rc-slider-mark-text {
+    color: #ffffff !important; /* White text for better contrast */
+}
+
+.custom-slider .rc-slider-tooltip-inner {
+    background-color: #333 !important; /* Dark tooltip */
+    color: #ffffff !important; /* White tooltip text */
+    border: 1px solid #555 !important;
+}

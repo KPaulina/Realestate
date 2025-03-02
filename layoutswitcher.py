@@ -1,25 +1,31 @@
-import dash
-from dash import Dash, dcc, html, Input, Output, callback
-import requests
-import pandas as pd
-import plotly.express as px
+from dash import html, Input, Output
 import dash_bootstrap_components as dbc
 
 from app import app
 from layouts.average_prices import prices_layout
 from layouts.procentage_change import percentage_change_layout
+from darkly_theme import darkly_template
+import plotly.io as pio
 
+pio.templates["darkly"] = darkly_template
+pio.templates.default = "darkly"
 
 app_tabs = html.Div(
     [
         dbc.Tabs(
             [
-                dbc.Tab(label="Średnie ceny", tab_id="tab-prices", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
-                dbc.Tab(label="Analiza procentowa", tab_id="tab-trends", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
-                # dbc.Tab(label="Other", tab_id="tab-other", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
-            ],
+                dbc.Tab(label="Średnie ceny", tab_id="tab-prices",
+                        labelClassName="text-light fw-bold bg-dark rounded-top",
+                        activeLabelClassName="text-white fw-bold bg-success"),
+                dbc.Tab(label="Analiza procentowa",
+                        tab_id="tab-trends",
+                        labelClassName="text-light fw-bold bg-dark rounded-top",
+                        activeLabelClassName="text-white fw-bold bg-danger"
+                        ),
+                            ],
             id="tabs",
             active_tab="tab-prices",
+            className="mb-3 border-bottom",
         ),
     ], className="mt-3"
 )
