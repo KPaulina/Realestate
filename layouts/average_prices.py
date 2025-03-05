@@ -2,7 +2,7 @@ from dash import dcc, html, Input, Output
 import plotly.express as px
 from fetchdata import df_offer, df_transaction, df_offer_secondary, df_transaction_secondary
 from app import app
-from utils.calculations import get_min_max_kwartal
+from utils.calculations import get_min_max_kwartal, get_quarter_calculations
 
 cities = df_offer.columns[2:].to_list()
 
@@ -11,13 +11,7 @@ df_transaction, min_kwartal, max_kwartal = get_min_max_kwartal(df_transaction)
 df_offer_secondary, min_kwartal, max_kwartal = get_min_max_kwartal(df_offer_secondary)
 df_transaction_secondary, min_kwartal, max_kwartal = get_min_max_kwartal(df_transaction_secondary)
 
-
-latest_quarter = df_offer["kwartal_int"].max()
-earliest_quarter = latest_quarter - 25
-
-valid_quarters = [year * 10 + q for year in range(2006, 2026) for q in range(1, 5)]
-
-valid_quarters = [q for q in valid_quarters if q <= latest_quarter]
+latest_quarter, earliest_quarter, valid_quarters = get_quarter_calculations(df_offer)
 
 marks = {q: f"Q{q % 10} {q // 10}" for q in valid_quarters if q % 10 == 1}
 marks[min(valid_quarters)] = f"Q{min(valid_quarters) % 10} {min(valid_quarters) // 10}"  # Ensure first quarter label
@@ -25,7 +19,7 @@ marks[max(valid_quarters)] = f"Q{max(valid_quarters) % 10} {max(valid_quarters) 
 
 
 prices_layout = html.Div([
-    html.H2("🏡 Średnie ceny ofertowe i transakcyjne",
+    html.H3("🏡 Średnie ceny ofertowe i transakcyjne",
             style={'textAlign': 'center', 'margin-top': '60px', 'color': '#FFFFFF'}),
 
     # Dropdown (unchanged, keeping dash-bootstrap class)

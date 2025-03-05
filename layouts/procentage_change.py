@@ -41,7 +41,7 @@ fig_transaction_secondary_change = px.bar(df_transaction_secondary_changes, x="c
 # Add graphs to the layout
 percentage_change_layout = html.Div([
 
-    html.H2(f"📊 Zmiany procentowe średniej ceny pomiędzy przedostatnim, {the_second_to_last_quarter}, i ostatnim kwartałem, {the_last_quarter}.",
+    html.H3(f"📊 Zmiany procentowe średniej ceny pomiędzy przedostatnim, {the_second_to_last_quarter}, i ostatnim kwartałem, {the_last_quarter}.",
             style={'textAlign': 'center', 'margin-top': '40px', 'color': '#FFFFFF'}),
 
     html.Div([

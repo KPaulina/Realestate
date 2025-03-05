@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from app import app
 from layouts.average_prices import prices_layout
 from layouts.procentage_change import percentage_change_layout
+from layouts.biggest_diff_offer_trans import diff_layout
 from darkly_theme import darkly_template
 import plotly.io as pio
 
@@ -17,8 +18,13 @@ app_tabs = html.Div(
                 dbc.Tab(label="Średnie ceny", tab_id="tab-prices",
                         labelClassName="text-light fw-bold bg-dark rounded-top",
                         activeLabelClassName="text-white fw-bold bg-success"),
-                dbc.Tab(label="Analiza procentowa",
+                dbc.Tab(label="Analiza procentowa kw/kw",
                         tab_id="tab-trends",
+                        labelClassName="text-light fw-bold bg-dark rounded-top",
+                        activeLabelClassName="text-white fw-bold bg-danger"
+                        ),
+                dbc.Tab(label="Różnica cen",
+                        tab_id="tab-diff",
                         labelClassName="text-light fw-bold bg-dark rounded-top",
                         activeLabelClassName="text-white fw-bold bg-danger"
                         ),
@@ -48,6 +54,8 @@ def switch_tab(tab_chosen):
         return prices_layout
     elif tab_chosen == "tab-trends":
         return percentage_change_layout
+    elif tab_chosen == "tab-diff":
+        return diff_layout
     return html.P("This shouldn't be displayed for now...")
 
 
