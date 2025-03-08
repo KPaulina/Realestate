@@ -1,7 +1,8 @@
 from dash import dcc, html
 import plotly.express as px
-from fetchdata import df_offer_changes, df_transaction_changes, df_offer_secondary_changes, df_transaction_secondary_changes, df_offer
+from fetchdata import df_offer, df_transaction, df_offer_secondary, df_transaction_secondary
 from darkly_theme import darkly_template
+from utils.calculations import calculate_percentage_change
 import plotly.io as pio
 
 the_last_quarter = df_offer['kwartal'].iloc[-1]
@@ -9,6 +10,12 @@ the_second_to_last_quarter = df_offer['kwartal'].iloc[-2]
 
 pio.templates["darkly"] = darkly_template
 pio.templates.default = "darkly"
+
+#calculate procent change for all dataframes
+df_offer_changes = calculate_percentage_change(df_offer)
+df_transaction_changes = calculate_percentage_change(df_transaction)
+df_offer_secondary_changes = calculate_percentage_change(df_offer_secondary)
+df_transaction_secondary_changes = calculate_percentage_change(df_transaction_secondary)
 
 fig_offer_change = px.bar(df_offer_changes, x="cities", y="price_percentage_change",
                           title="Zmiana procentowa - Ceny Ofertowe (Rynek Pierwotny)",

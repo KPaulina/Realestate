@@ -26,9 +26,3 @@ df_transaction = fetch_data(API_URL_TRANSACTION)
 df_offer_secondary = fetch_data(API_URL_OFFER_SECONDARY)
 df_transaction_secondary = fetch_data(API_URL_TRANSACTION_SECONDARY)
 
-cities = df_offer.columns[2:].to_list()
-
-df_offer_changes = calculate_percentage_change(df_offer)
-df_transaction_changes = calculate_percentage_change(df_transaction)
-df_offer_secondary_changes = calculate_percentage_change(df_offer_secondary)
-df_transaction_secondary_changes = calculate_percentage_change(df_transaction_secondary)

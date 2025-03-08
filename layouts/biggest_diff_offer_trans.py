@@ -2,12 +2,11 @@ from dash import dcc, html, Input, Output
 import plotly.express as px
 from fetchdata import df_offer, df_transaction, df_offer_secondary, df_transaction_secondary
 from app import app
-from utils.calculations import calculate_biggest_price_change, calculate_relative_price_gap
+from utils.calculations import calculate_biggest_price_change
 
-df_absolute_gap = calculate_biggest_price_change(df_offer, df_transaction)
-df_absolute_gap_secondary = calculate_biggest_price_change(df_offer_secondary, df_transaction_secondary)
-df_relative_gap = calculate_relative_price_gap(df_offer, df_transaction)
-df_relative_gap_secondary = calculate_relative_price_gap(df_offer_secondary, df_transaction_secondary)
+df_absolute_gap, df_relative_gap  = calculate_biggest_price_change(df_offer, df_transaction)
+df_absolute_gap_secondary, df_relative_gap_secondary = calculate_biggest_price_change(df_offer_secondary,
+                                                                                      df_transaction_secondary)
 
 diff_layout = html.Div([
     html.H3("📊 Analiza różnic między cenami ofertowymi i transakcyjnymi", style={'textAlign': 'center'}),

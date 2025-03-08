@@ -54,7 +54,7 @@ def get_quarter_calculations(df: pd.DataFrame) -> tuple[int, int, List[int]]:
     return latest_quarter, earliest_quarter, valid_quarters
 
 
-def calculate_biggest_price_change(df_offer: pd.DataFrame, df_transaction: pd.DataFrame) -> pd.DataFrame:
+def calculate_biggest_price_change(df_offer: pd.DataFrame, df_transaction: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     df_offer.iloc[:, 2:] = df_offer.iloc[:, 2:].apply(pd.to_numeric, errors='coerce')
     df_transaction.iloc[:, 2:] = df_transaction.iloc[:, 2:].apply(pd.to_numeric, errors='coerce')
     # null values will be a problem, so they are replaced with 0
@@ -73,25 +73,6 @@ def calculate_biggest_price_change(df_offer: pd.DataFrame, df_transaction: pd.Da
     df_top_gaps = df_last_quarter_values.abs().mean().sort_values(ascending=False)
     df_top_gaps = df_top_gaps.reset_index()  # Convert Series to DataFrame
     df_top_gaps.columns = ["Miasto", "Cena"]  # Rename columns
-    return df_top_gaps[df_top_gaps["Miasto"].isin(CITIES)]
-
-
-def calculate_relative_price_gap(df_offer: pd.DataFrame, df_transaction: pd.DataFrame) -> pd.DataFrame:
-    # Ensure only numeric columns (excluding 'id' and 'kwartal') are converted, handling errors
-    df_offer.iloc[:, 2:] = df_offer.iloc[:, 2:].apply(pd.to_numeric, errors='coerce')
-    df_transaction.iloc[:, 2:] = df_transaction.iloc[:, 2:].apply(pd.to_numeric, errors='coerce')
-
-    # Align both DataFrames to ensure they have the same structure
-    df_transaction = df_transaction.reindex(df_offer.index)
-    df_transaction = df_transaction[df_offer.columns]
-
-    # Fill missing values with 0 or interpolate them (choose one strategy)
-    df_offer.iloc[:, 2:].fillna(0, inplace=True)  # or df_offer.iloc[:, 2:].interpolate(inplace=True)
-    df_transaction.iloc[:, 2:].fillna(0, inplace=True)
-
-    # Compute absolute price difference (excluding first two columns)
-    df_price_diff = df_offer.copy()
-    df_price_diff.iloc[:, 2:] = df_offer.iloc[:, 2:] - df_transaction.iloc[:, 2:]
 
     # Compute relative difference (percentage difference)
     df_relative_diff = df_price_diff.copy()
@@ -109,9 +90,6 @@ def calculate_relative_price_gap(df_offer: pd.DataFrame, df_transaction: pd.Data
     # Drop non-city columns ('id' and 'kwartal') to focus only on price differences
     df_last_quarter_values = df_last_quarter.iloc[:, 2:]
 
-    # Absolute price difference
-    df_top_gaps = df_last_quarter_values.abs().mean().sort_values(ascending=False)
-
     # Calculate relative difference (percentage gap)
     df_relative_gap = (df_last_quarter_values / df_offer[df_offer["kwartal"] == last_quarter].iloc[:, 2:]).abs() * 100
 
@@ -120,4 +98,5 @@ def calculate_relative_price_gap(df_offer: pd.DataFrame, df_transaction: pd.Data
 
     df_relative_gap_sorted = df_relative_gap_sorted.reset_index()  # Convert Series to DataFrame
     df_relative_gap_sorted.columns = ["Miasto", "Procent"]  # Rename columns
-    return df_relative_gap_sorted[df_relative_gap_sorted["Miasto"].isin(CITIES)]
+
+    return df_top_gaps[df_top_gaps["Miasto"].isin(CITIES)], df_relative_gap_sorted[df_relative_gap_sorted["Miasto"].isin(CITIES)]
